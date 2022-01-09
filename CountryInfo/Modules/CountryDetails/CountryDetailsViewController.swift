@@ -28,6 +28,7 @@ class CountryDetailsViewController: UIViewController, CountryDetailsViewControll
     super.viewDidLoad()
     setupViews()
   }
+  
   override func updateViewConstraints() {
     super.updateViewConstraints()    
     if !didSetupConstraints {
@@ -42,7 +43,7 @@ class CountryDetailsViewController: UIViewController, CountryDetailsViewControll
     guard let country = country else {
       return
     }
-    officialNameLabel = UILabel(text: country.name.official, font: .avenir26())
+    officialNameLabel = UILabel(text: country.name.official, font: .helveticaNeue26())
     officialNameLabel.textAlignment = .center
     regionNameLabel = UILabel(text: "Region: \(country.region)")
     capitalLabel = UILabel(text: "Capital: \(country.capital.first ?? "")")
@@ -60,7 +61,7 @@ class CountryDetailsViewController: UIViewController, CountryDetailsViewControll
     }
     flagImage.image = UIImage(data: imageData)
     flagImage.contentMode = .scaleAspectFit
-    view.addSubviews([flagImage, officialNameLabel, regionNameLabel, capitalLabel, populationLabel, timeZoneLabel])
+    view.addSubviews([flagImage, officialNameLabel])
   }
 }
 
@@ -68,6 +69,11 @@ class CountryDetailsViewController: UIViewController, CountryDetailsViewControll
 
 extension CountryDetailsViewController {
   private func setupConstraints() {
+    let stackView = UIStackView(arrangedSubviews: [regionNameLabel, capitalLabel, populationLabel, timeZoneLabel],
+                                axis: .vertical, spacing: 10)
+    stackView.translatesAutoresizingMaskIntoConstraints = false
+    view.addSubview(stackView)
+    
     NSLayoutConstraint.activate([
       flagImage.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 25),
       flagImage.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
@@ -78,21 +84,9 @@ extension CountryDetailsViewController {
       officialNameLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
       officialNameLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
       
-      regionNameLabel.topAnchor.constraint(equalTo: officialNameLabel.bottomAnchor, constant: 16),
-      regionNameLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
-      regionNameLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
-      
-      capitalLabel.topAnchor.constraint(equalTo: regionNameLabel.bottomAnchor, constant: 16),
-      capitalLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
-      capitalLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
-      
-      populationLabel.topAnchor.constraint(equalTo: capitalLabel.bottomAnchor, constant: 16),
-      populationLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
-      populationLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
-      
-      timeZoneLabel.topAnchor.constraint(equalTo: populationLabel.bottomAnchor, constant: 16),
-      timeZoneLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
-      timeZoneLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
+      stackView.topAnchor.constraint(equalTo: officialNameLabel.bottomAnchor, constant: 16),
+      stackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+      stackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
     ])
   }
 }

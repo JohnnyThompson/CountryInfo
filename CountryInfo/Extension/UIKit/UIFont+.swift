@@ -8,11 +8,12 @@
 import UIKit
 
 extension UIFont {
-  static func avenir20() -> UIFont? {
-      return UIFont.init(name: "avenir", size: 20)
+  
+  static func helveticaNeue20() -> UIFont? {
+      return UIFont.init(name: "Helvetica Neue", size: 18)
   }
   
-  static func avenir26() -> UIFont? {
-      return UIFont.init(name: "avenir", size: 26)
+  static func helveticaNeue26() -> UIFont? {
+      return UIFont.init(name: "Helvetica Neue", size: 25)
   }
 }

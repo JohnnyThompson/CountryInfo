@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19574" systemVersion="21A559" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Country" representedClassName="Country" syncable="YES">
+        <attribute name="capital" attributeType="Transformable" customClassName="[String]"/>
+        <attribute name="population" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="region" attributeType="String"/>
+        <attribute name="subregion" attributeType="String"/>
+        <attribute name="timezones" attributeType="Transformable" customClassName="[String]"/>
+        <relationship name="flags" maxCount="1" deletionRule="Nullify" destinationEntity="Flags"/>
+        <relationship name="name" maxCount="1" deletionRule="Nullify" destinationEntity="Name"/>
+    </entity>
+    <entity name="Flags" representedClassName="Flags" syncable="YES">
+        <attribute name="png" attributeType="String" defaultValueString=""/>
+    </entity>
+    <entity name="Name" representedClassName="Name" syncable="YES">
+        <attribute name="common" attributeType="String" defaultValueString=""/>
+        <attribute name="official" attributeType="String" defaultValueString=""/>
+    </entity>
+    <elements>
+        <element name="Flags" positionX="-72.73046875" positionY="-90.9296875" width="128" height="58"/>
+        <element name="Name" positionX="-75.4765625" positionY="37.76171875" width="128" height="73"/>
+        <element name="Country" positionX="-312.92578125" positionY="-151.640625" width="128" height="148"/>
+    </elements>
+</model>

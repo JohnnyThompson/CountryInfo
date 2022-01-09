@@ -21,8 +21,13 @@ class CountriesListViewController: UIViewController, CountriesListViewController
   // MARK: - Lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()
+    title = "Country Info"
     fetchData()
     setupViews()
+  }
+  
+  override func viewWillAppear(_ animated: Bool) {
+    tableView.reloadData()
   }
   
   override func updateViewConstraints() {
@@ -33,7 +38,6 @@ class CountriesListViewController: UIViewController, CountriesListViewController
       didSetupConstraints = true
     }
   }
-  
   
   // MARK: - Module functions
   private func setupViews() {
@@ -53,32 +57,22 @@ class CountriesListViewController: UIViewController, CountriesListViewController
 }
 
 // MARK: - UITableViewDataSource
-extension CountriesListViewController: UITableViewDataSource {
-  
+extension CountriesListViewController: UITableViewDataSource {  
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     return countries.count
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    guard var cell = tableView.dequeueReusableCell(withIdentifier: "CountryListCell") else {
-      var newCell = UITableViewCell(style: .default, reuseIdentifier: "CountryListCell")
-      configureCell(&newCell, with: indexPath)
+    guard let cell = tableView.dequeueReusableCell(withIdentifier: "CountryCell") as? CountryCell  else {
+      let newCell = CountryCell(style: .default, reuseIdentifier: "CountryCell", country: countries[indexPath.row])
       return newCell
     }
-    configureCell(&cell, with: indexPath)
+    cell.configure(with: countries[indexPath.row])
     return cell
-  }
-
-  func configureCell(_ cell: inout UITableViewCell, with indexPath: IndexPath) {
-    var configuration = cell.defaultContentConfiguration()
-    guard !countries.isEmpty else {
-      return
-    }
-    configuration.text = countries[indexPath.row].name.common
-    cell.contentConfiguration = configuration
   }
 }
 
+// MARK: - UITableViewDelegate
 extension CountriesListViewController: UITableViewDelegate {
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     tableView.deselectRow(at: indexPath, animated: true)
@@ -86,6 +80,16 @@ extension CountriesListViewController: UITableViewDelegate {
     var detailsVC: CountryDetailsViewControllerProtocol = CountryDetailsViewController()
     detailsVC.country = country
     navigationController?.pushViewController(detailsVC as! UIViewController, animated: true)
+  }
+  
+  func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+    let action = UIContextualAction(style: .normal, title: "isFavorite") { [unowned self] _, _, _ in
+      var isFavorite = StorageManager.shared.getFavoriteStatus(for: countries[indexPath.row].name.common)
+      isFavorite.toggle()
+      StorageManager.shared.setFavoriteStatus(for: countries[indexPath.row].name.common, with: isFavorite)
+      tableView.reloadRows(at: [indexPath], with: .fade)
+    }
+    return UISwipeActionsConfiguration(actions: [action])
   }
 }
 
@@ -100,4 +104,3 @@ extension CountriesListViewController {
     ])
   }
 }
-

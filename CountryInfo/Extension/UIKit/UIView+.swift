@@ -14,11 +14,4 @@ extension UIView {
       addSubview($0)
     }
   }
-  
-  func setDefaultLeadingTrailingConstraints(_ view: UIView, rootView: UIView) {
-    NSLayoutConstraint.activate([
-      view.leadingAnchor.constraint(equalTo: rootView.safeAreaLayoutGuide.leadingAnchor, constant: 16),
-      view.trailingAnchor.constraint(equalTo: rootView.safeAreaLayoutGuide.trailingAnchor, constant: -16)
-    ])
-  }
 }

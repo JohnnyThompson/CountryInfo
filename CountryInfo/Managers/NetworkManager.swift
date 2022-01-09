@@ -8,29 +8,32 @@
 import Foundation
 
 class NetworkManager {
+  // MARK: - Properties
   static let shared = NetworkManager()
   private var api = "https://restcountries.com/v3.1/all?fields=name,capital,region,subregion,population,timezones,flags"
   
+  // MARK: - Lifecycle
   private init() { }
-  
+    
+  // MARK: - Public functions
   func fetchData(completion: @escaping (_ countries: Countries) -> Void) {
-      guard let url = URL(string: api) else {
+    guard let url = URL(string: api) else {
+      return
+    }
+    URLSession.shared.dataTask(with: url) { data, _, error in
+      guard let data = data else {
+        print(error?.localizedDescription ?? "No description")
         return
       }
-      URLSession.shared.dataTask(with: url) { data, _, error in
-          guard let data = data else {
-              print(error?.localizedDescription ?? "No description")
-              return
-          }
-          do {
-              let decoder = JSONDecoder()
-              let countries = try decoder.decode(Countries.self, from: data)
-              DispatchQueue.main.async {
-                  completion(countries)
-              }
-          } catch let error {
-              print("Error serialization json", error)
-          }
-      }.resume()
+      do {
+        let decoder = JSONDecoder()
+        let countries = try decoder.decode(Countries.self, from: data)
+        DispatchQueue.main.async {
+          completion(countries)
+        }
+      } catch let error {
+        print("Error serialization json", error)
+      }
+    }.resume()
   }
 }

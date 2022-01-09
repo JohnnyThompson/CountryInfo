@@ -8,13 +8,19 @@
 import Foundation
 
 class ImageManager {
-    static let shared = ImageManager()
-    
-    private init() {}
-    
-    func fetchImage(from url: URL?) -> Data? {
-        guard let url = url else { return nil }
-        guard let imageData = try? Data(contentsOf: url) else { return nil}
-        return imageData
+  // MARK: - Properties
+  static let shared = ImageManager()
+  
+  // MARK: - Initialization
+  private init() {}
+  
+  // MARK: - Public function
+  func fetchImage(from stringURL: String) -> Data? {
+    guard let url = URL(string: stringURL) else {
+      return nil
     }
+    guard let imageData = try? Data(contentsOf: url) else {
+      return nil}
+    return imageData
+  }
 }
