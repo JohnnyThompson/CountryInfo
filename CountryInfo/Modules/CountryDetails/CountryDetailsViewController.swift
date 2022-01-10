@@ -8,12 +8,16 @@
 import UIKit
 
 protocol CountryDetailsViewControllerProtocol {
-  var country: Country? { get set }
+  var viewModel: CountryDetailsViewModelProtocol! { get set }
 }
 
 class CountryDetailsViewController: UIViewController, CountryDetailsViewControllerProtocol {
-  
   // MARK: - Properties
+  var viewModel: CountryDetailsViewModelProtocol! {
+    didSet {
+      self.setupViews()
+    }
+  }
   private var flagImage = UIImageView()
   private var officialNameLabel: UILabel!
   private var regionNameLabel: UILabel!
@@ -21,7 +25,6 @@ class CountryDetailsViewController: UIViewController, CountryDetailsViewControll
   private var populationLabel: UILabel!
   private var timeZoneLabel: UILabel!
   private var didSetupConstraints = false
-  var country: Country?
   
   // MARK: - Lifecycle
   override func viewDidLoad() {
@@ -40,26 +43,14 @@ class CountryDetailsViewController: UIViewController, CountryDetailsViewControll
   
   // MARK: - Module functions
   private func setupViews() {
-    guard let country = country else {
-      return
-    }
-    officialNameLabel = UILabel(text: country.name.official, font: .helveticaNeue26())
+    officialNameLabel = UILabel(text: viewModel.officialName, font: .helveticaNeue26())
     officialNameLabel.textAlignment = .center
-    regionNameLabel = UILabel(text: "Region: \(country.region)")
-    capitalLabel = UILabel(text: "Capital: \(country.capital.first ?? "")")
-    populationLabel = UILabel(text: "Population: \(country.population)")
-    var timeZones: String = ""
-    country.timezones.forEach {
-        timeZones.append("\($0) ")
-    }
-    timeZoneLabel = UILabel(text: "Time zones: \(timeZones)")
+    regionNameLabel = UILabel(text: viewModel.regionName)
+    capitalLabel = UILabel(text: viewModel.capital)
+    populationLabel = UILabel(text: viewModel.population)
+    timeZoneLabel = UILabel(text: viewModel.timeZone)
     
-    
-    guard let imageData = ImageManager.shared.fetchImage(from: country.flags.png) else {
-      flagImage.image = UIImage(systemName: "nosign") ?? UIImage()
-      return
-    }
-    flagImage.image = UIImage(data: imageData)
+    flagImage.image = UIImage(data: viewModel.flagImage)
     flagImage.contentMode = .scaleAspectFit
     view.addSubviews([flagImage, officialNameLabel])
   }

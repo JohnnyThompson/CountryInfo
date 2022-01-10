@@ -26,4 +26,10 @@ class StorageManager {
   func getFavoriteStatus(for countryName: String) -> Bool {
     defaults.bool(forKey: countryName)
   }
+  
+  func toggleFavoriteStatus(for countryName: String) {
+    var favoriteStatus = getFavoriteStatus(for: countryName)
+    favoriteStatus.toggle()
+    setFavoriteStatus(for: countryName, with: favoriteStatus)
+  }
 }
