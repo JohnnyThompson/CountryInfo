@@ -15,12 +15,15 @@ protocol FavoriteCountriesViewModelProtocol {
   func cellViewModel(at indexPath: IndexPath) -> CountryTableViewCellViewModelProtocol
   func deleteFromFavorite(at indexPath: IndexPath)
   func viewModelForSelectedRow(at indexPath: IndexPath) -> CountryDetailsViewModelProtocol
+  func search(with string: String, completion: @escaping () -> Void)
+  func cancelSearch(completion: @escaping () -> Void)
 }
 
 class FavoriteCountriesViewModel: FavoriteCountriesViewModelProtocol {
   // MARK: - Properties
   private var countries = Countries()
   var favoriteCountries = Countries()
+  private var tmpFavoriteCountries = Countries()
   
   // MARK: - Public functions
   func fetchCountries(completion: @escaping () -> Void) {
@@ -39,6 +42,7 @@ class FavoriteCountriesViewModel: FavoriteCountriesViewModelProtocol {
       }
     }
     favoriteCountries.sort { $0.name.common < $1.name.common}
+    tmpFavoriteCountries = favoriteCountries
   }
   
   func numberOfRows() -> Int {
@@ -59,5 +63,25 @@ class FavoriteCountriesViewModel: FavoriteCountriesViewModelProtocol {
   func viewModelForSelectedRow(at indexPath: IndexPath) -> CountryDetailsViewModelProtocol {
     let country = favoriteCountries[indexPath.row]
     return CountryDetailsViewModel(country: country)
+  }
+  
+  func search(with string: String, completion: @escaping () -> Void) {
+    favoriteCountries = []
+    if string == "" {
+      favoriteCountries = tmpFavoriteCountries
+      completion()
+    } else {
+      tmpFavoriteCountries.forEach { country in
+        if country.name.common.lowercased().contains(string.lowercased()){
+          favoriteCountries.append(country)
+        }
+      }
+      completion()
+    }
+  }
+  
+  func cancelSearch(completion: @escaping () -> Void) {
+    favoriteCountries = tmpFavoriteCountries
+    completion()
   }
 }
