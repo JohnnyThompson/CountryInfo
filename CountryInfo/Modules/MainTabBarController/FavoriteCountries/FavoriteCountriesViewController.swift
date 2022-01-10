@@ -24,6 +24,7 @@ class FavoriteCountriesViewController: UIViewController {
     super.viewDidLoad()
     viewModel = FavoriteCountriesViewModel()
     setupViews()
+    setupSearchBar()
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -47,6 +48,17 @@ class FavoriteCountriesViewController: UIViewController {
     tableView.delegate = self
     tableView.translatesAutoresizingMaskIntoConstraints = false
     view.addSubview(tableView)
+  }
+  
+  private func setupSearchBar() {
+    navigationController?.navigationBar.prefersLargeTitles = true
+    navigationController?.navigationBar.tintColor = #colorLiteral(red: 0.8549019694, green: 0.250980407, blue: 0.4784313738, alpha: 1)
+    let searchController = UISearchController(searchResultsController: nil)
+    navigationItem.hidesSearchBarWhenScrolling = false
+    searchController.hidesNavigationBarDuringPresentation = true
+    searchController.obscuresBackgroundDuringPresentation = false
+    navigationItem.searchController = searchController
+    searchController.searchBar.delegate = self
   }
 }
 
@@ -82,6 +94,8 @@ extension FavoriteCountriesViewController: UITableViewDelegate {
       viewModel.deleteFromFavorite(at: indexPath)
       tableView.reloadSections(IndexSet(arrayLiteral: indexPath.section),with: .automatic)
     }
+    action.image = UIImage(systemName: "star.slash.fill")
+    action.backgroundColor = #colorLiteral(red: 0.9529411793, green: 0.6862745285, blue: 0.1333333403, alpha: 1)
     return UISwipeActionsConfiguration(actions: [action])
   }
 }
@@ -95,6 +109,22 @@ extension FavoriteCountriesViewController {
       tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
       tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
     ])
+  }
+}
+
+// MARK: - UISearchBarDelegate
+
+extension FavoriteCountriesViewController: UISearchBarDelegate {
+  func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+    viewModel.search(with: searchText) { [unowned self] in
+      tableView.reloadData()
+    }
+  }
+  
+  func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+    viewModel.cancelSearch { [unowned self] in
+      tableView.reloadData()
+    }
   }
 }
 
