@@ -10,16 +10,20 @@ import UIKit
 class CountriesListViewController: UIViewController {
   
   // MARK: - Properties
-  let tableView = UITableView()
-  private var countries = Countries()
+  private let tableView = UITableView()
   private var didSetupConstraints = false
-  private let storageManager = StorageManager.shared
+  private var viewModel: CountryListViewModelProtocol! {
+    didSet {
+      viewModel.fetchCountries { [unowned self] in
+        self.tableView.reloadData()
+      }
+    }
+  }
   
   // MARK: - Lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()
-    title = "Country Info"
-    fetchData()
+    viewModel = CountryListViewModel()
     setupViews()
   }
   
@@ -38,41 +42,28 @@ class CountriesListViewController: UIViewController {
   
   // MARK: - Module functions
   private func setupViews() {
+    title = "Country Info"
     tableView.dataSource = self
     tableView.delegate = self
     tableView.translatesAutoresizingMaskIntoConstraints = false
     view.addSubview(tableView)
-  }
-
-  private func fetchData() {
-    NetworkManager.shared.fetchData { [unowned self] countries in
-      self.countries = countries
-      self.countries.sort { $0.name.common < $1.name.common}
-      tableView.reloadData()
-    }
   }
 }
 
 // MARK: - UITableViewDataSource
 extension CountriesListViewController: UITableViewDataSource {  
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return countries.count
+    viewModel.numberOfRows()
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    guard var cell = tableView.dequeueReusableCell(withIdentifier: "CountryCell") as? CountryCell  else {
-      var newCell = CountryCell(style: .default, reuseIdentifier: "CountryCell")
-      configure(&newCell, with: countries[indexPath.row])
-      return newCell
+    guard let cell = tableView.dequeueReusableCell(withIdentifier: "CountryCell") as? CountryTableViewCell  else {
+      let cell = CountryTableViewCell(style: .default, reuseIdentifier: "CountryCell")
+      cell.viewModel = viewModel.cellViewModel(at: indexPath)
+      return cell
     }
-    configure(&cell, with: countries[indexPath.row])
+    cell.viewModel = viewModel.cellViewModel(at: indexPath)
     return cell
-  }
-  
-  private func configure(_ cell: inout CountryCell, with country: Country) {
-    let favoriteStatus = storageManager.getFavoriteStatus(for: country.name.common)
-    cell.isFavoriteButton.tintColor = favoriteStatus ? .red : .gray
-    cell.countryName.text = country.name.common
   }
 }
 
@@ -80,17 +71,15 @@ extension CountriesListViewController: UITableViewDataSource {
 extension CountriesListViewController: UITableViewDelegate {
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     tableView.deselectRow(at: indexPath, animated: true)
-    let country = countries[indexPath.row]
-    var detailsVC: CountryDetailsViewControllerProtocol = CountryDetailsViewController()
-    detailsVC.country = country
-    navigationController?.pushViewController(detailsVC as! UIViewController, animated: true)
+    let detailsViewModel = viewModel.viewModelForSelectedRow(at: indexPath)
+    var detailsViewController: CountryDetailsViewControllerProtocol = CountryDetailsViewController()
+    detailsViewController.viewModel = detailsViewModel
+    navigationController?.pushViewController(detailsViewController as! UIViewController, animated: true)
   }
   
   func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
     let action = UIContextualAction(style: .normal, title: "isFavorite") { [unowned self] _, _, _ in
-      var isFavorite = storageManager.getFavoriteStatus(for: countries[indexPath.row].name.common)
-      isFavorite.toggle()
-      storageManager.setFavoriteStatus(for: countries[indexPath.row].name.common, with: isFavorite)
+      viewModel.toggleFavoriteStatus(at: indexPath)
       tableView.reloadRows(at: [indexPath], with: .fade)
     }
     return UISwipeActionsConfiguration(actions: [action])
