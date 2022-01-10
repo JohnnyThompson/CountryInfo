@@ -7,11 +7,7 @@
 
 import UIKit
 
-protocol FavoriteCountriesViewControllerProtocol: AnyObject {
-  
-}
-
-class FavoriteCountriesViewController: UIViewController, FavoriteCountriesViewControllerProtocol {
+class FavoriteCountriesViewController: UIViewController {
   // MARK: - Properties
   let tableView = UITableView()
   private var countries = Countries()
@@ -74,12 +70,19 @@ extension FavoriteCountriesViewController: UITableViewDataSource {
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    guard let cell = tableView.dequeueReusableCell(withIdentifier: "CountryCell") as? CountryCell  else {
-      let newCell = CountryCell(style: .default, reuseIdentifier: "CountryCell", country: favoriteCountries[indexPath.row])
+    guard var cell = tableView.dequeueReusableCell(withIdentifier: "CountryCell") as? CountryCell  else {
+      var newCell = CountryCell(style: .default, reuseIdentifier: "CountryCell")
+      configure(&newCell, with: favoriteCountries[indexPath.row])
       return newCell
     }
-    cell.configure(with: favoriteCountries[indexPath.row])
+    configure(&cell, with: favoriteCountries[indexPath.row])
     return cell
+  }
+  
+  private func configure(_ cell: inout CountryCell, with country: Country) {
+    let favoriteStatus = StorageManager.shared.getFavoriteStatus(for: country.name.common)
+    cell.isFavoriteButton.tintColor = favoriteStatus ? .red : .gray
+    cell.countryName.text = country.name.common
   }
 }
 
@@ -99,7 +102,7 @@ extension FavoriteCountriesViewController: UITableViewDelegate {
       isFavorite.toggle()
       StorageManager.shared.setFavoriteStatus(for: favoriteCountries[indexPath.row].name.common, with: isFavorite)
       favoriteCountries.remove(at: indexPath.row)
-      tableView.reloadSections(IndexSet(arrayLiteral: indexPath.section),with: .automatic)
+      tableView.reloadSections(IndexSet(arrayLiteral: indexPath.section),with: .fade)
     }
     return UISwipeActionsConfiguration(actions: [action])
   }

@@ -7,16 +7,13 @@
 
 import UIKit
 
-protocol CountriesListViewControllerProtocol: AnyObject {
-    
-}
-
-class CountriesListViewController: UIViewController, CountriesListViewControllerProtocol {
+class CountriesListViewController: UIViewController {
   
   // MARK: - Properties
   let tableView = UITableView()
   private var countries = Countries()
   private var didSetupConstraints = false
+  private let storageManager = StorageManager.shared
   
   // MARK: - Lifecycle
   override func viewDidLoad() {
@@ -63,12 +60,19 @@ extension CountriesListViewController: UITableViewDataSource {
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    guard let cell = tableView.dequeueReusableCell(withIdentifier: "CountryCell") as? CountryCell  else {
-      let newCell = CountryCell(style: .default, reuseIdentifier: "CountryCell", country: countries[indexPath.row])
+    guard var cell = tableView.dequeueReusableCell(withIdentifier: "CountryCell") as? CountryCell  else {
+      var newCell = CountryCell(style: .default, reuseIdentifier: "CountryCell")
+      configure(&newCell, with: countries[indexPath.row])
       return newCell
     }
-    cell.configure(with: countries[indexPath.row])
+    configure(&cell, with: countries[indexPath.row])
     return cell
+  }
+  
+  private func configure(_ cell: inout CountryCell, with country: Country) {
+    let favoriteStatus = storageManager.getFavoriteStatus(for: country.name.common)
+    cell.isFavoriteButton.tintColor = favoriteStatus ? .red : .gray
+    cell.countryName.text = country.name.common
   }
 }
 
@@ -84,9 +88,9 @@ extension CountriesListViewController: UITableViewDelegate {
   
   func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
     let action = UIContextualAction(style: .normal, title: "isFavorite") { [unowned self] _, _, _ in
-      var isFavorite = StorageManager.shared.getFavoriteStatus(for: countries[indexPath.row].name.common)
+      var isFavorite = storageManager.getFavoriteStatus(for: countries[indexPath.row].name.common)
       isFavorite.toggle()
-      StorageManager.shared.setFavoriteStatus(for: countries[indexPath.row].name.common, with: isFavorite)
+      storageManager.setFavoriteStatus(for: countries[indexPath.row].name.common, with: isFavorite)
       tableView.reloadRows(at: [indexPath], with: .fade)
     }
     return UISwipeActionsConfiguration(actions: [action])
