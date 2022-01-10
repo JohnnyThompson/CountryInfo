@@ -1,9 +1,9 @@
-#  Country info      
+#  Country Info      
 ## Описание       
-Архитектура: MVVM
-Работа с сетью: URLSession
-Работа с данными: UserDefaults
-Верстка кодом
+- **MVVM**
+- **URLSession**
+- **UserDefaults**
+- **Верстка кодом**
 
 ## Внешний вид приложения
 
