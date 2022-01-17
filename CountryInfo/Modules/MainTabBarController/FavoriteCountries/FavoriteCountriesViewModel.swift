@@ -8,6 +8,7 @@
 import Foundation
 
 protocol FavoriteCountriesViewModelProtocol {
+  var networkManager: NetworkManagerProtocol { get }
   var favoriteCountries: Countries { get }
   func fetchCountries(completion: @escaping() -> Void)
   func checkFavoriteCountries()
@@ -21,13 +22,14 @@ protocol FavoriteCountriesViewModelProtocol {
 
 class FavoriteCountriesViewModel: FavoriteCountriesViewModelProtocol {
   // MARK: - Properties
+  var networkManager: NetworkManagerProtocol = NetworkManager.shared
   private var countries = Countries()
   var favoriteCountries = Countries()
   private var tmpFavoriteCountries = Countries()
   
   // MARK: - Public functions
   func fetchCountries(completion: @escaping () -> Void) {
-    NetworkManager.shared.fetchData { [unowned self] countries in
+    networkManager.fetchData { [unowned self] countries in
       self.countries = countries
       checkFavoriteCountries()
       completion()

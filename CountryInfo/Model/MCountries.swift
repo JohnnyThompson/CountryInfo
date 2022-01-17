@@ -9,22 +9,32 @@ import Foundation
 
 typealias Countries = [Country]
 
-struct Country: Codable {
+struct Country: Codable, Equatable {
   let flags: Flags
   let name: Name
   let capital: [String]
   let region: String
-//  let subregion: String
   let population: Int
   let timezones: [String]
-  var isFavorite: Bool? = false
+  
+  static func == (lhs: Country, rhs: Country) -> Bool {
+    guard lhs.flags == rhs.flags,
+          lhs.name == rhs.name,
+          lhs.capital == rhs.capital,
+          lhs.region == rhs.region,
+          lhs.population == rhs.population,
+          lhs.timezones == rhs.timezones else {
+            return false
+          }
+    return true
+  }
 }
 
-struct Flags: Codable {
+struct Flags: Codable, Equatable {
   let png: String
 }
 
-struct Name: Codable {
+struct Name: Codable, Equatable {
   let common: String
   let official: String
 }

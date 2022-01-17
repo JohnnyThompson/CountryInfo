@@ -16,7 +16,8 @@ class MainTabBarController: UITabBarController {
     let countriesListViewController = CountriesListViewController()
     let favoriteCountryViewController = FavoriteCountriesViewController()
     
-    tabBar.tintColor = #colorLiteral(red: 0.8549019694, green: 0.250980407, blue: 0.4784313738, alpha: 1)
+//    tabBar.tintColor = #colorLiteral(red: 0.8549019694, green: 0.250980407, blue: 0.4784313738, alpha: 1)
+    tabBar.tintColor = UIColor(red: 218/255, green: 64/255, blue: 122/255, alpha: 1)
     
     let boldConfiguration = UIImage.SymbolConfiguration(weight: .medium)
     let countriesListImage = UIImage(

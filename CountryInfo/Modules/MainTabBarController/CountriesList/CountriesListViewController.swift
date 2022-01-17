@@ -35,7 +35,7 @@ class CountriesListViewController: UIViewController {
   override func updateViewConstraints() {
     super.updateViewConstraints()
     if !didSetupConstraints {
-      view.backgroundColor = #colorLiteral(red: 0.9750193954, green: 0.97865659, blue: 0.9938426614, alpha: 1)
+      view.backgroundColor = UIColor(red: 249/255, green: 250/255, blue: 253/255, alpha: 1)
       setupConstraints()
       didSetupConstraints = true
     }
@@ -52,7 +52,7 @@ class CountriesListViewController: UIViewController {
   
   private func setupSearchBar() {
     navigationController?.navigationBar.prefersLargeTitles = true
-    navigationController?.navigationBar.tintColor = #colorLiteral(red: 0.8549019694, green: 0.250980407, blue: 0.4784313738, alpha: 1)
+    navigationController?.navigationBar.tintColor = UIColor(red: 218/255, green: 64/255, blue: 122/255, alpha: 1)
     let searchController = UISearchController(searchResultsController: nil)
     navigationItem.hidesSearchBarWhenScrolling = false
     searchController.hidesNavigationBarDuringPresentation = true
@@ -96,10 +96,10 @@ extension CountriesListViewController: UITableViewDelegate {
     }
     if viewModel.returnFavoriteStatus(at: indexPath) {
       action.image = UIImage(systemName: "star.slash.fill")
-      action.backgroundColor = #colorLiteral(red: 0.9529411793, green: 0.6862745285, blue: 0.1333333403, alpha: 1)
+      action.backgroundColor = UIColor(red: 243/255, green: 175/255, blue: 34/255, alpha: 1)
     } else {
       action.image = UIImage(systemName: "star.fill")
-      action.backgroundColor = #colorLiteral(red: 0.8549019694, green: 0.250980407, blue: 0.4784313738, alpha: 1)
+      action.backgroundColor = UIColor(red: 218/255, green: 64/255, blue: 122/255, alpha: 1)
     }
     return UISwipeActionsConfiguration(actions: [action])
   }

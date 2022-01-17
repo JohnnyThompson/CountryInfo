@@ -7,15 +7,16 @@
 
 import Foundation
 
+protocol StorageManagerProtocol {
+  func setFavoriteStatus(for countryName: String, with status: Bool)
+  func getFavoriteStatus(for countryName: String) -> Bool
+  func toggleFavoriteStatus(for countryName: String)
+}
 
-class StorageManager {
+class StorageManager: StorageManagerProtocol {
   // MARK: - Properties
   static let shared = StorageManager()
   let defaults = UserDefaults.standard
-  let countryKey = "countries"
-  
-  // MARK: - Initialization
-  private init() {}
   
   // MARK: - Public function
   
