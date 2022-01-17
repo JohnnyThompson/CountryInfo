@@ -7,13 +7,14 @@
 
 import Foundation
 
-class NetworkManager {
+protocol NetworkManagerProtocol {
+  func fetchData(completion: @escaping (_ countries: Countries) -> Void)
+}
+
+class NetworkManager: NetworkManagerProtocol {
   // MARK: - Properties
   static let shared = NetworkManager()
   private var api = "https://restcountries.com/v3.1/all?fields=name,capital,region,subregion,population,timezones,flags"
-  
-  // MARK: - Lifecycle
-  private init() { }
     
   // MARK: - Public functions
   func fetchData(completion: @escaping (_ countries: Countries) -> Void) {

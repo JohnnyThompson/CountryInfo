@@ -9,6 +9,7 @@ import Foundation
 
 protocol CountryListViewModelProtocol {
   var countries: Countries { get }
+  init(networkManager: NetworkManagerProtocol, storageManager: StorageManagerProtocol)
   func fetchCountries(completion: @escaping() -> Void)
   func numberOfRows() -> Int
   func cellViewModel(at indexPath: IndexPath) -> CountryTableViewCellViewModelProtocol
@@ -21,16 +22,23 @@ protocol CountryListViewModelProtocol {
 
 class CountryListViewModel: CountryListViewModelProtocol {
   // MARK: - Properties
+  private var networkManager: NetworkManagerProtocol
+  private var storageManager: StorageManagerProtocol
   var countries = Countries()
   private var tmpCountries = Countries()
   
+  // MARK: - Initialization
+  required init(networkManager: NetworkManagerProtocol = NetworkManager.shared,
+                storageManager: StorageManagerProtocol = StorageManager.shared) {
+    self.networkManager = networkManager
+    self.storageManager = storageManager
+  }
+  
   // MARK: - Public functions
   func fetchCountries(completion: @escaping () -> Void) {
-    NetworkManager.shared.fetchData { [unowned self] countries in
-      self.countries = countries
-      self.tmpCountries = countries
-      self.tmpCountries.sort { $0.name.common < $1.name.common}
-      self.countries.sort { $0.name.common < $1.name.common}
+    networkManager.fetchData { [unowned self] countries in
+      self.countries = countries.sorted { $0.name.common < $1.name.common}
+      self.tmpCountries = countries.sorted { $0.name.common < $1.name.common}
       completion()
     }
   }
@@ -46,12 +54,12 @@ class CountryListViewModel: CountryListViewModelProtocol {
   
   func toggleFavoriteStatus(at indexPath: IndexPath) {
     let country = countries[indexPath.row]
-    StorageManager.shared.toggleFavoriteStatus(for: country.name.common)
+    storageManager.toggleFavoriteStatus(for: country.name.common)
   }
   
   func returnFavoriteStatus(at indexPath: IndexPath) -> Bool {
     let country = countries[indexPath.row]
-    return StorageManager.shared.getFavoriteStatus(for: country.name.common)
+    return storageManager.getFavoriteStatus(for: country.name.common)
   }
   
   func viewModelForSelectedRow(at indexPath: IndexPath) -> CountryDetailsViewModelProtocol {
