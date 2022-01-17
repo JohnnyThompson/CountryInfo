@@ -17,7 +17,6 @@ class StorageManager: StorageManagerProtocol {
   // MARK: - Properties
   static let shared = StorageManager()
   let defaults = UserDefaults.standard
-  let countryKey = "countries"
   
   // MARK: - Public function
   

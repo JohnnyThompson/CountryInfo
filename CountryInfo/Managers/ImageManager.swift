@@ -7,12 +7,13 @@
 
 import Foundation
 
-class ImageManager {
+protocol ImageManagerProtocol {
+  func fetchImage(from stringURL: String) -> Data?
+}
+
+class ImageManager: ImageManagerProtocol {
   // MARK: - Properties
   static let shared = ImageManager()
-  
-  // MARK: - Initialization
-  private init() {}
   
   // MARK: - Public function
   func fetchImage(from stringURL: String) -> Data? {

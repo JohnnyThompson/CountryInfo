@@ -19,8 +19,10 @@ protocol CountryDetailsViewModelProtocol {
 
 class CountryDetailsViewModel: CountryDetailsViewModelProtocol {
   // MARK: - Properties
+  private var imageManager: ImageManagerProtocol = ImageManager.shared
+  
   var flagImage: Data {
-    ImageManager.shared.fetchImage(from: country.flags.png) ?? Data()
+    imageManager.fetchImage(from: country.flags.png) ?? Data()
   }
   
   var officialName: String {

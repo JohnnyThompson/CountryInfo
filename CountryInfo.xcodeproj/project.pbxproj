@@ -29,6 +29,7 @@
 		266BA18B27888A8F0027D4D2 /* UIFont+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 266BA18A27888A8F0027D4D2 /* UIFont+.swift */; };
 		268E064C278BD10100D54357 /* FavoriteCountriesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268E064B278BD10100D54357 /* FavoriteCountriesViewModel.swift */; };
 		268F2711279573F400FC5BED /* CountriesListViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268F2710279573F400FC5BED /* CountriesListViewModelTests.swift */; };
+		268F2713279595FF00FC5BED /* StorageManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 268F2712279595FF00FC5BED /* StorageManagerTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,6 +68,7 @@
 		268E064B278BD10100D54357 /* FavoriteCountriesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteCountriesViewModel.swift; sourceTree = "<group>"; };
 		268E06C8278EDA7900D54357 /* CountryInfoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CountryInfoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		268F2710279573F400FC5BED /* CountriesListViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountriesListViewModelTests.swift; sourceTree = "<group>"; };
+		268F2712279595FF00FC5BED /* StorageManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManagerTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -217,6 +219,7 @@
 		268E06C9278EDA7900D54357 /* CountryInfoTests */ = {
 			isa = PBXGroup;
 			children = (
+				268F27142795960700FC5BED /* StorageManager */,
 				268F270F2795736000FC5BED /* CountryListTests */,
 			);
 			path = CountryInfoTests;
@@ -228,6 +231,14 @@
 				268F2710279573F400FC5BED /* CountriesListViewModelTests.swift */,
 			);
 			path = CountryListTests;
+			sourceTree = "<group>";
+		};
+		268F27142795960700FC5BED /* StorageManager */ = {
+			isa = PBXGroup;
+			children = (
+				268F2712279595FF00FC5BED /* StorageManagerTests.swift */,
+			);
+			path = StorageManager;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -357,6 +368,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				268F2711279573F400FC5BED /* CountriesListViewModelTests.swift in Sources */,
+				268F2713279595FF00FC5BED /* StorageManagerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
